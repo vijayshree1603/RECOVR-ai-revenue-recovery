@@ -1,270 +1,174 @@
-\# RECOVR — AI Revenue Recovery
+# RECOVR — AI Revenue Recovery Platform
 
+> Detect stuck payments, explain the root cause, choose a safe recovery playbook, and show a merchant exactly what happened.
 
+RECOVR is a merchant-side revenue-operations platform built for the Razorpay Buildathon. It turns payment exceptions into an explainable workflow: detection, diagnosis, policy decision, recovery, verification, audit, and analytics.
 
-> An AI-powered merchant system that detects revenue at risk, diagnoses why a payment is stuck, selects a bounded recovery action, and keeps every decision auditable.
+## Why RECOVR
 
+Merchants often discover payment failures too late, then manually reconcile bank, gateway, and settlement information. RECOVR makes that process proactive and understandable.
 
+- Identifies where a payment is stuck in its lifecycle.
+- Explains the diagnosis with deterministic evidence and confidence.
+- Prioritizes the cases with the highest revenue impact.
+- Selects safe, issue-specific recovery playbooks.
+- Requires merchant approval for selected high-value actions.
+- Keeps every decision and event visible in an audit trail.
 
-\## 🚀 Overview
-
-
-
-RECOVR is an AI revenue recovery system designed for merchants.
-
-
-
-Payments can become financially risky because of checkout abandonment, bank confirmation delays, settlement issues, or recurring payment failures. RECOVR continuously analyzes these situations and guides the merchant toward the appropriate recovery action.
-
-
-
-The system follows a simple decision pipeline:
-
-
-
-\*\*Detect → Diagnose → Intervene → Govern\*\*
-
-
-
-\## 🎯 Problem
-
-
-
-Revenue can be lost even after a customer has started or completed part of the payment journey.
-
-
-
-Traditional dashboards mainly show payment status, but they may not clearly explain:
-
-
-
-\- Where the payment is stuck
-
-\- Why it is stuck
-
-\- How much revenue is at risk
-
-\- What action should be taken
-
-\- Whether the action is safe and allowed
-
-\- What happened during recovery
-
-
-
-RECOVR brings these decisions into one merchant-focused dashboard.
-
-
-
-\## 💡 Solution
-
-
-
-RECOVR monitors payment journeys and converts payment events into actionable recovery decisions.
-
-
-
-\### 1. Detect
-
-Identifies payments that are at risk of revenue loss.
-
-
-
-\### 2. Diagnose
-
-Determines the likely root cause and provides a confidence score.
-
-
-
-\### 3. Intervene
-
-Selects an appropriate recovery workflow such as monitoring, automated recovery, or escalation.
-
-
-
-\### 4. Govern
-
-Applies bounded recovery policies, stopping rules, and maintains an audit trail for decisions.
-
-
-
-\## ✨ Key Features
-
-
-
-\- 💰 Revenue-at-risk monitoring
-
-\- 🔎 Payment journey visualization
-
-\- 🤖 AI-assisted diagnosis
-
-\- 📊 Diagnosis confidence score
-
-\- ⚡ Automated recovery workflow
-
-\- 🛡️ Bounded recovery actions
-
-\- 🚦 Recovery and escalation status
-
-\- 📈 Batch-level revenue analytics
-
-\- 🧾 Auditability of recovery decisions
-
-\- 👨‍💼 Merchant-friendly dashboard
-
-\- 🔍 Payment-level explainability
-
-
-
-\## 🖥️ Dashboard
-
-
-
-RECOVR provides a merchant dashboard with:
-
-
-
-\- Total revenue monitored
-
-\- Revenue at risk
-
-\- Revenue currently in recovery
-
-\- Revenue recovered
-
-\- Recovery queue
-
-\- Payment details
-
-\- Payment journey
-
-\- Root-cause diagnosis
-
-\- Recovery action
-
-\- Analytics
-
-\- Audit information
-
-
-
-\## 🔄 Payment Journey
-
-
-
-RECOVR represents the payment lifecycle as a journey:
-
-
-
-\*\*Payment Started → Bank Confirmation → Payment Received → Settlement → Merchant Bank Credit\*\*
-
-
-
-When a payment becomes stuck, RECOVR identifies the relevant stage and explains the situation to the merchant.
-
-
-
-\## 📊 Demo Dataset
-
-
-
-The current demonstration monitors:
-
-
-
-| Metric | Value |
-
-|---|---:|
-
-| Payments monitored | 6 |
-
-| Total revenue monitored | ₹24,500 |
-
-| Revenue at risk | ₹15,000 |
-
-| Payments recovering | 2 |
-
-| Revenue recovered | ₹1,800 |
-
-| Payments recovered | 1 |
-
-
-
-These values represent the project's demonstration dataset.
-
-
-
-\## 🏗️ Architecture
-
-
+## Product flow
 
 ```text
+Payment event
+  → Detection
+  → Diagnosis + evidence
+  → Policy guardrail
+  → Recovery / escalation
+  → Verification
+  → Audit log + updated analytics
+```
 
-&#x20;                   ┌─────────────────────┐
+## Key capabilities
 
-&#x20;                   │   Payment Events    │
+### Smart priority queue
 
-&#x20;                   └──────────┬──────────┘
+RECOVR ranks unresolved cases by a deterministic score based on diagnosis confidence, payment amount, lifecycle exposure, and recovery state. The queue labels cases as `CRITICAL`, `HIGH`, `MEDIUM`, or `RESOLVED`.
 
-&#x20;                              │
+### Explainable decision trace
 
-&#x20;                              ▼
+Every case displays the exact path behind the recommendation:
 
-&#x20;                   ┌─────────────────────┐
+1. Detection — stuck lifecycle stage
+2. Diagnosis — root cause and confidence
+3. Policy — allowed action or guardrail
+4. Action — monitoring, recovery, or escalation
 
-&#x20;                   │       DETECT        │
+### Recovery playbooks
 
-&#x20;                   │ Revenue at Risk     │
+Each issue maps to a clear operational playbook with automation level, expected resolution time, and execution steps.
 
-&#x20;                   └──────────┬──────────┘
+| Issue | Playbook | Safe action |
+|---|---|---|
+| Settlement mismatch | Settlement reconciliation | Escalate for investigation |
+| Settlement delay | Automated settlement retry | Retry and verify credit |
+| Bank confirmation delay | Bank confirmation watch | Monitor confirmation |
+| Checkout abandonment | Checkout recovery | Start recovery workflow |
+| Subscription payment failure | Smart subscription retry | Retry recurring payment |
 
-&#x20;                              │
+### Safe event simulator
 
-&#x20;                              ▼
+The app simulates bank and settlement webhook events without contacting any payment provider. Events update the same backend payment state used by the dashboard, analytics, payment drawer, and audit log.
 
-&#x20;                   ┌─────────────────────┐
+### Merchant approval guardrail
 
-&#x20;                   │      DIAGNOSE       │
+Karthik’s ₹7,500 checkout recovery requires merchant approval before the automatic recovery can start. This demonstrates bounded automation for financially sensitive actions.
 
-&#x20;                   │ Root Cause +        │
+### Interactive analytics
 
-&#x20;                   │ Confidence Score    │
+- Click an outcome segment (`At risk`, `Recovering`, or `Recovered`) to inspect a matching payment.
+- Click a lifecycle leak segment (`Checkout`, `Bank`, `Settlement`, or `Subscription`) to open an affected payment.
+- Compare original revenue at risk against revenue currently protected by RECOVR.
 
-&#x20;                   └──────────┬──────────┘
+## Demo data
 
-&#x20;                              │
+The baseline dataset contains exactly six payments.
 
-&#x20;                              ▼
+| Payment | Customer | Amount | Method | Status | Stuck at | Recovery state |
+|---|---|---:|---|---|---|---|
+| PAY_1001 | Rahul | ₹5,000 | UPI | At risk | Settlement | Escalated |
+| PAY_1002 | Priya | ₹2,500 | Card | At risk | Bank | Monitoring |
+| PAY_1003 | Arjun | ₹3,200 | UPI | Recovering | Settlement | Recovery in progress |
+| PAY_1004 | Sneha | ₹1,800 | Card | Recovered | Settlement | Recovered |
+| PAY_1005 | Karthik | ₹7,500 | UPI | At risk | Checkout | Approval required |
+| PAY_1006 | Ananya | ₹4,500 | Card | Recovering | Subscription | Recovery in progress |
 
-&#x20;                   ┌─────────────────────┐
+Baseline metrics: **₹24,500 monitored · ₹15,000 at risk · 2 active recoveries · ₹1,800 recovered**.
 
-&#x20;                   │     INTERVENE       │
+## Architecture
 
-&#x20;                   │ Recovery Workflow   │
+```text
+React dashboard (Vite)
+    │  HTTP / JSON
+    ▼
+FastAPI API
+    ├── deterministic detection and diagnosis
+    ├── policy / approval guardrails
+    ├── demo-safe recovery engine
+    ├── event simulator
+    ├── in-memory audit ledger
+    └── analytics + priority queue
+```
 
-&#x20;                   └──────────┬──────────┘
+### Stack
 
-&#x20;                              │
+- **Frontend:** React, JSX, CSS, Vite
+- **Backend:** Python, FastAPI, Pydantic
+- **State:** In-memory demo state, resettable via API
 
-&#x20;                              ▼
+## Run locally
 
-&#x20;                   ┌─────────────────────┐
+### Backend
 
-&#x20;                   │       GOVERN        │
+```powershell
+cd backend
+.\venv\Scripts\python.exe -m uvicorn main:app --reload
+```
 
-&#x20;                   │ Policy + Stopping   │
+API runs at `http://127.0.0.1:8000`.
 
-&#x20;                   │ Rules + Audit Trail │
+### Frontend
 
-&#x20;                   └──────────┬──────────┘
+```powershell
+cd frontend
+npm install
+npm run dev
+```
 
-&#x20;                              │
+Open `http://127.0.0.1:5173`.
 
-&#x20;                              ▼
+No additional runtime dependencies are required if `node_modules` and the backend virtual environment already exist.
 
-&#x20;                   ┌─────────────────────┐
+## API reference
 
-&#x20;                   │ Merchant Dashboard  │
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `GET` | `/health` | API readiness check |
+| `GET` | `/payments` | List all payments with computed intelligence |
+| `GET` | `/payments/{payment_id}` | View a single payment case |
+| `POST` | `/payments/{payment_id}/recover` | Start safe simulated recovery or escalation |
+| `POST` | `/payments/{payment_id}/approve` | Record merchant approval for a guarded recovery |
+| `POST` | `/payments/{payment_id}/verify` | Verify and complete recovery |
+| `POST` | `/payments/{payment_id}/simulate-event` | Simulate a payment webhook event |
+| `GET` | `/analytics` | Live metrics, distributions, and priority queue |
+| `GET` | `/audit` | Timestamped RECOVR decision trail |
+| `POST` | `/demo/reset` | Restore the original six-payment baseline |
 
-&#x20;                   └─────────────────────┘
+### Example: simulate a bank confirmation
 
+```powershell
+Invoke-RestMethod -Method Post `
+  -ContentType 'application/json' `
+  -Body '{"event_type":"BANK_CONFIRMED"}' `
+  http://127.0.0.1:8000/payments/PAY_1002/simulate-event
+```
+
+## Five-minute demo path
+
+1. Click **LIVE DEMO → Open guide**.
+2. Open Rahul’s case and explain Settlement mismatch, evidence, and the decision trace.
+3. Open Karthik’s case; approve the safe recovery, start it, then simulate a payment event.
+4. Open Analytics and click a lifecycle leak segment.
+5. Finish in Audit Log and show the complete system trail.
+6. Use **Reset demo data** before another presentation.
+
+## Safety and limitations
+
+RECOVR intentionally performs **no real financial transaction**. Recovery actions, approvals, and webhooks are deterministic demo simulations. The application keeps state in memory; restarting the FastAPI process restores the baseline demo data. A production version would replace the simulator with authenticated provider webhooks, durable storage, idempotency, role-based authorization, and real reconciliation services.
+
+## Build verification
+
+```powershell
+cd frontend
+npm run build
+```
+
+The frontend production build is verified as part of the project workflow.
