@@ -173,7 +173,7 @@ payments = [
         "recovered_amount": 0.0,
 
         "policy_allowed": True,
-        "approval_required": False,
+        "approval_required": True,
         "stopping_rule_triggered": False,
 
         "what_happened": "The customer started the checkout process but the payment was not completed.",
